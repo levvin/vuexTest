@@ -1,7 +1,10 @@
-export function changeA({commit},name) {
-	return commit ('changeA',name)
-}
 
-export function changeB({commit},name) {
-	return commit ('changeB', name)
+import axios from "axios";
+export default{
+	getList:(context)=>{
+		axios.get('../../static/list.json')
+		.then(data=>{
+		    context.commit("setlist",data.data)
+		 })
+	}
 }
