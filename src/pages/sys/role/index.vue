@@ -1,54 +1,60 @@
 <template>
-  <div class="artic">
-    角色管理页面
-    <Table border :columns="columns7" :data="data6"></Table>
+  <div class="role">
+    <Form class="search" ref="formCustom"   :label-width="80">
+        <FormItem label="角色编码" prop="age">
+            <Input type="text" placeholder="请输入角色编码..."></Input>
+        </FormItem>
+        <FormItem label="角色名称" prop="name">
+            <Input type="text" placeholder="请输入角色名称..."></Input>
+        </FormItem>
+        <FormItem>
+            <Button>查询</Button>
+            <Button type="primary" style="margin-left: 8px">添加</Button>
+        </FormItem>
+    </Form>
+    <Table  :columns="historyColumns" :data="list"></Table>
+    <Page :total="dataCount" :page-size="pageSize" show-sizer show-total />
   </div>
 </template>
 <script>
-import {Table} from 'iview'
+import {Table,Page} from 'iview'
+
+import axios from "axios";
 export default {
   name: 'role',
   data() {
     return{
-     columns7: [
-                    {
-                        title: '序号',
-                        key: 'id'
-                    },
-                    {
-                        title: '角色名称',
-                        key: 'name',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Icon', {
-                                    props: {
-                                        type: 'person'
-                                    }
-                                }),
-                                h('strong', params.row.name)
-                            ]);
-                        }
-                    },
-                    {
-                        title: '创建时间',
-                        key: 'age'
-                    },
-                    {
-                        title: '修改时间',
-                        key: 'address'
-                    },
-                    {
+     list:[],
+     dataCount: 0,
+     pageSize: 10,
+     historyColumns: [
+        {
+           title:"序号",
+           key:'id',
+           sortable: true 
+        },
+        {
+           title:"角色名称",
+           key:'name'           
+        },
+        {
+           title:"创建时间",
+           key:'createtime',
+           sortable: true 
+        },
+        {
+           title:"更新时间",
+           key:'updatetime',
+           sortable: true 
+        },
+           {
                         title: '操作',
                         key: 'action',
-                        width: 150,
+                        width: 300,
                         align: 'center',
                         render: (h, params) => {
                             return h('div', [
-                                h('Button', {
-                                    props: {
-                                        type: 'primary',
-                                        size: 'small'
-                                    },
+                                h('Button', {                                  
                                     style: {
                                         marginRight: '5px'
                                     },
@@ -59,9 +65,8 @@ export default {
                                     }
                                 }, '修改'),
                                 h('Button', {
-                                    props: {
-                                        type: 'error',
-                                        size: 'small'
+                                    style: {
+                                        color: 'red'
                                     },
                                     on: {
                                         click: () => {
@@ -72,52 +77,62 @@ export default {
                             ]);
                         }
                     }
-                ],
-                data6: [
-                    {   
-                        id:1,
-                        name: '嵩山区管理员',
-                        age: '2018-06-01 14:02:15',
-                        address: '2018-07-05 15:55:21'
-                    },
-                    {   
-                        id:2,
-                        name: '嵩山区管理员',
-                        age: '2018-06-01 14:02:15',
-                        address: '2018-07-05 15:55:21'
-                    },
-                    {   
-                        id:3,
-                        name: '嵩山区管理员',
-                        age: '2018-06-01 14:02:15',
-                        address: '2018-07-05 15:55:21'
-                    },
-                    {   
-                        id:4,
-                        name: '嵩山区管理员',
-                        age: '2018-06-01 14:02:15',
-                        address: '2018-07-05 15:55:21'
-                    },
-                ]
+     ]
     }
   },
+  mounted(){
+    this.getList()
+  },
   methods: {
-     show (index) {
-                this.$Modal.info({
-                    title: 'User Info',
-                    content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-                })
-            },
-      remove (index) {
-          this.data6.splice(index, 1);
-      }
+      getList(){
+        let that = this;
+        axios.get('https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/role?page=1&pageSize=8')
+        .then((res)=>{
+                      
+            let data = res.data.data
+            console.log(data)
+            // if(res.code === 0){
+                that.dataCount = data.count
+                that.list = data.data
+                              
+        })
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
+   
   }
-  
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
- 
+.search{
+    display:flex;
+    flex-direction:row;
+    justify-content:space-between;
+}
+ td,th{
+    padding:10px 0;
+    margin: 5px auto;
+    border-left:none;
+    border-right:none;
+    border-bottom: 1px solid #ddd;
+ }
+ .data:hover{
+    background-color:rgba(0,255,255,0.1);
+ }
+ .update:hover{
+    color:#1890ff;
+ }
+ .delete{
+    color:red;
+ }
+ .delete:hover{
+    background-color:red;
+    color:#fff;
+    border-color:red;
+ }
+ .ivu-page{margin-top:5px;float:right;}
 
 </style>
