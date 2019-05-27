@@ -13,7 +13,7 @@
         </FormItem>
     </Form>
     <Table  :columns="historyColumns" :data="list"></Table>
-    <Page :total="dataCount" :page-size="pageSize" show-sizer show-total />
+    <Page :total="AllCount" :page-size="pageSize" show-sizer show-total :current-page="currentPage"  />
   </div>
 </template>
 <script>
@@ -25,8 +25,9 @@ export default {
   data() {
     return{
      list:[],
-     dataCount: 0,
+     currentPage:1,
      pageSize: 10,
+     AllCount: 0,
      historyColumns: [
         {
            title:"序号",
@@ -86,14 +87,14 @@ export default {
   methods: {
       getList(){
         let that = this;
-        axios.get('https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/role?page=1&pageSize=8')
-        .then((res)=>{
-                      
-            let data = res.data.data
+        let BaseUrl = "https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/role"
+        axios.get(BaseUrl)
+        .then((res)=>{                     
+            let data = res.data
             console.log(data)
             // if(res.code === 0){
-                that.dataCount = data.count
-                that.list = data.data
+                that.AllCount = data.count
+                that.list = data.data.data
                               
         })
         .catch((err)=>{
