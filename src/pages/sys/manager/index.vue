@@ -1,11 +1,18 @@
 <template>
   <div class="manager">
     <Form class="search" ref="formCustom"   :label-width="80">
-        <FormItem label="角色编码" prop="age">
-            <Input type="text" placeholder="请输入角色编码..."></Input>
+        <FormItem label="姓名" prop="name">
+            <Input type="text" placeholder="请输入姓名..."></Input>
         </FormItem>
-        <FormItem label="角色名称" prop="name">
-            <Input type="text" placeholder="请输入角色名称..."></Input>
+        <FormItem label="用户名" prop="name">
+            <Input type="text" placeholder="请输入用户名..."></Input>
+        </FormItem>
+        <br/>
+         <FormItem label="身份证号" prop="IDcard">
+            <Input type="num" placeholder="请输入身份证号..."></Input>
+        </FormItem>
+         <FormItem label="手机号码" prop="phone">
+            <Input type="tel" placeholder="请输入手机号..."></Input>
         </FormItem>
         <FormItem>
             <Button>查询</Button>
@@ -17,7 +24,7 @@
   </div>
 </template>
 <script>
-import {Table,Page} from 'iview'
+import {Table,Page,Switch} from 'iview'
 
 import axios from "axios";
 export default {
@@ -36,8 +43,20 @@ export default {
            sortable: true 
         },
         {
-           title:"角色名称",
+           title:"姓名",
            key:'name'           
+        },
+         {
+           title:"角色类型",
+           key:'type'           
+        },
+         {
+           title:"账号",
+           key:'account'           
+        },
+         {
+           title:"手机号",
+           key:'phone'           
         },
         {
            title:"创建时间",
@@ -49,7 +68,30 @@ export default {
            key:'updatetime',
            sortable: true 
         },
-           {
+        
+        {
+          title: '授权为门锁管理员',
+          key: 'Switch',
+          render:(h, params) => {
+            return h('div', [
+
+            h('i-switch', { //数据库1是已处理，0是未处理
+                  props: {
+                    value: params.row.treatment === 1  //控制开关的打开或关闭状态，官网文档属性是value
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    'on-change': (value) => {//触发事件是on-change,用双引号括起来， //参数value是回调值，并没有使用到                                           
+                      this.switch(params.index) //params.index是拿到table的行序列，可以取到对应的表格值
+                    }
+                  }
+            })
+          ])   
+          }      
+        },
+        {
                         title: '操作',
                         key: 'action',
                         width: 300,
@@ -88,13 +130,13 @@ export default {
   methods: {
       getList(){
         let that = this;
-        axios.get('https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/role')
+        axios.get('https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/manager')
         .then((res)=>{
             console.log(res)            
             let data = res.data
             if(res.status === 200){
                 that.dataCount = res.data.total_count
-                that.list = data.data
+                that.list = data.data.data
             }                   
         })
         .catch((err)=>{
@@ -105,6 +147,15 @@ export default {
         debugger
         this.pageSize = num;
         this. getList(1);
+    },
+    switch(index) {
+      //打开是true,已经处理1
+      if (this.data1[index].treatment == 1) {
+        this.data1[index].treatment = 0
+        this.updateFeedbackMessage(this.data1[index].id, 'treatment', this.data1[index].treatment)
+      } else {
+        this.updateFeedbackMessage(this.data1[index].id, 'treatment', 1)
+      }
     },
   }
 }
