@@ -8,16 +8,51 @@
             <Input type="text" placeholder="请输入角色名称..."></Input>
         </FormItem>
         <FormItem label="设备名称" prop="name">
-             <Select v-model="model1" style="width:200px">
+             <Select style="width:200px">
                 <Option v-for="item in deviceType" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
         </FormItem>
         <FormItem>
             <Button>查询</Button>
-            <Button type="primary" style="margin-left: 8px">添加</Button>
+            <Button type="primary" style="margin-left: 8px"  @click="modal">添加</Button>
+            <Modal
+              v-model="modal1"
+              title="添加一台新设备"
+              @on-ok="ok"
+              @on-cancel="cancel">
+              <Form >
+                <FormItem label="id" prop="id">
+                    <Input type="text" placeholder="请输入角色编码..."></Input>
+                </FormItem>
+                <FormItem label="设备名称" prop="name">
+                    <Input type="text" placeholder="请输入角色名称..."></Input>
+                </FormItem>
+                <FormItem label="设备编号" prop="deviceId">
+                    <Input type="text" placeholder="请输入角色编码..."></Input>
+                </FormItem>
+                
+                <FormItem label="设备类型" prop="type">
+                     <Select style="width:200px">
+                        <Option v-for="item in deviceType" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                    </Select>
+                </FormItem>
+                 <FormItem label="设备编号" prop="deviceId">
+                    <Input type="text" placeholder="请输入角色编码..."></Input>
+                </FormItem>
+                 <FormItem label="设备编号" prop="deviceId">
+                    <Input type="text" placeholder="请输入角色编码..."></Input>
+                </FormItem>
+                 <FormItem label="设备编号" prop="deviceId">
+                    <Input type="text" placeholder="请输入角色编码..."></Input>
+                </FormItem>
+                 <FormItem label="设备编号" prop="deviceId">
+                    <Input type="text" placeholder="请输入角色编码..."></Input>
+                </FormItem>
+              </Form>
+            </Modal>
         </FormItem>
     </Form>
-    <Table  :columns="historyColumns" :data="list"></Table>
+    <Table  :columns="historyColumns" :data="historyData"></Table>
      <Page 
      :total="dataCount" 
      :current="pageNum" 
@@ -30,15 +65,17 @@
   </div>
 </template>
 <script>
-import {Table,Page,Select} from 'iview'
+import {Table,Page,Select,Modal,Input} from 'iview'
 
 import axios from "axios";
 export default {
   name: 'device',
   data() {
     return{
+     modal1: false,
      list:[],
      dataCount:0,
+     historyData:[],
      pageNum:1,
      page:1,
      pageSize:10,
@@ -60,9 +97,6 @@ export default {
         label:'反扫锁'
       },
      ],
-     currentPage:1,
-     pageSize: 10,
-     AllCount: 0,
      historyColumns: [
         {
            title:"序号",
@@ -114,7 +148,7 @@ export default {
                                     },
                                     on: {
                                         click: () => {
-                                            this.remove(params.index)
+                                            this.deleteDevice(params.index)
                                         }
                                     }
                                 }, '删除')
@@ -128,22 +162,77 @@ export default {
     this.getList()
   },
   methods: {
-      getList(){
-        let that = this;
-        let BaseUrl = "https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/device?page=1&pageSize=10"
-        axios.get(BaseUrl)
-        .then((res)=>{                     
-            let data = res.data
-            console.log(data)
-            // if(res.code === 0){
-                that.dataCount = data.count
-                that.list = data.data
+    //   getList(){
+    //     let that = this;
+    //     let BaseUrl = "https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/device?page=1&pageSize=10"
+    //     axios.get(BaseUrl)
+    //     .then((res)=>{                     
+    //         let data = res.data
+    //         console.log(data)
+    //         // if(res.code === 0){
+    //             that.dataCount = data.count
+    //             that.list = data.data
                               
-        })
-        .catch((err)=>{
-            console.log(err)
-        })
+    //     })
+    //     .catch((err)=>{
+    //         console.log(err)
+    //     })
+    // },
+
+    getList(){
+          let that=this;   //申明个this对象
+          let url ='https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/device?page=1&pageSize=10'; //本地模拟的数据
+          axios.get(url)
+          .then((res)=>{
+              console.log(res)
+              //接口返回数据的总条目数
+              that.dataCount = res.data.count; 
+              //接口返回的总数据
+              that.list=res.data.data;   
+              // console.log(self.list)
+              that.historyData   = that.list
+              //如果数据的总条目数小于每页显示的条目数就赋值，否则就提取总数据的第10条
+              // if(that.dataCount < that.pageSize){  
+              //   that.historyData   = that.list
+              //   //console.log(self.historyData)
+              // }else{
+              //   that.historyData = that.list.slice(0,that.pageSize);
+              //   // console.log(self.historyData)
+              // }
+          })
+          .catch((err)=>{
+              console.log(err+"读取失败!");
+          })               
     },
+    setSlist(arr) {
+    this.slist = JSON.parse(JSON.stringify(arr));
+    },
+    //增
+    addDevice(){
+      alert(666)
+      this.historyData.push({
+        id: 'ffff',
+        name: 'lily',
+        deviceId: '666666',
+        type: "电机锁",
+        createtime:new Date(),
+        updatetime:new Date(),
+        isDelete:0,
+        customerCode: "f80c7ec1-2ab2-4177-8d4e-c368b73ed0b7"
+      });
+    },
+    //删
+    deleteDevice(index){
+      this.historyData.splice(index,1)
+    },
+    //改
+    modifyData(index) {
+      this.selected = index; // 修改的位置
+      this.selectedlist = this.list[index];
+      this.isActive = true;
+    },
+   
+
     handlePage(value) {
       this.pageNum = value
       this.getList()
@@ -152,6 +241,24 @@ export default {
       this.pageSize = value
       this.getList()
     },
+    modal(){
+      this.modal1=true
+    },
+    ok () {
+      this.historyData.push({
+        id: 'ffff',
+        name: 'lily',
+        deviceId: '666666',
+        type: "电机锁",
+        createtime:new Date(),
+        updatetime:new Date(),
+        isDelete:0,
+        customerCode: "f80c7ec1-2ab2-4177-8d4e-c368b73ed0b7"
+      });
+    },
+    cancel () {
+        this.$Message.info('Clicked cancel');
+    }
    
   }
 }
