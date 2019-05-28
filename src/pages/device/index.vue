@@ -18,7 +18,15 @@
         </FormItem>
     </Form>
     <Table  :columns="historyColumns" :data="list"></Table>
-    <Page :total="AllCount" :page-size="pageSize" show-sizer show-total :current-page="currentPage"  />
+     <Page 
+     :total="dataCount" 
+     :current="pageNum" 
+     :page-size="pageSize" 
+     show-sizer 
+     show-total
+     @on-change="handlePage" 
+     @on-page-size-change='handlePageSize'
+    />
   </div>
 </template>
 <script>
@@ -30,6 +38,10 @@ export default {
   data() {
     return{
      list:[],
+     dataCount:0,
+     pageNum:1,
+     page:1,
+     pageSize:10,
      deviceType:[
       {
         value:'其他智能锁',
@@ -118,20 +130,28 @@ export default {
   methods: {
       getList(){
         let that = this;
-        let BaseUrl = "https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/device"
+        let BaseUrl = "https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/device?page=1&pageSize=10"
         axios.get(BaseUrl)
         .then((res)=>{                     
             let data = res.data
             console.log(data)
             // if(res.code === 0){
-                that.AllCount = data.count
-                that.list = data.data.data
+                that.dataCount = data.count
+                that.list = data.data
                               
         })
         .catch((err)=>{
             console.log(err)
         })
-    }
+    },
+    handlePage(value) {
+      this.pageNum = value
+      this.getList()
+    },
+    handlePageSize(value) {
+      this.pageSize = value
+      this.getList()
+    },
    
   }
 }

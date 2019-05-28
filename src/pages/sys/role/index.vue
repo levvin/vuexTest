@@ -13,7 +13,15 @@
         </FormItem>
     </Form>
     <Table  :columns="historyColumns" :data="list"></Table>
-    <Page :total="AllCount" :page-size="pageSize" show-sizer show-total :current-page="currentPage"  />
+    <Page 
+     :total="dataCount" 
+     :current="pageNum" 
+     :page-size="pageSize" 
+     show-sizer 
+     show-total
+     @on-change="handlePage" 
+     @on-page-size-change='handlePageSize'
+    />
   </div>
 </template>
 <script>
@@ -25,9 +33,9 @@ export default {
   data() {
     return{
      list:[],
-     currentPage:1,
+     page:1,
      pageSize: 10,
-     AllCount: 0,
+     dataCount: 0,
      historyColumns: [
         {
            title:"序号",
@@ -85,23 +93,30 @@ export default {
     this.getList()
   },
   methods: {
-      getList(){
+    getList(){
         let that = this;
-        let BaseUrl = "https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/role"
+        let BaseUrl = "https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/role?page=1&pageSize=10"
         axios.get(BaseUrl)
         .then((res)=>{                     
             let data = res.data
             console.log(data)
             // if(res.code === 0){
-                that.AllCount = data.count
-                that.list = data.data.data
-                              
+            that. dataCount = data.count
+            that.list = data.data                             
         })
         .catch((err)=>{
             console.log(err)
         })
+    },
+    handlePage(value) {
+      this.pageNum = value
+      this.getList()
+    },
+    handlePageSize(value) {
+      this.pageSize = value
+      this.getList()
     }
-   
+    
   }
 }
 </script>

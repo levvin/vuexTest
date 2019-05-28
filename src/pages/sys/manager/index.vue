@@ -20,7 +20,15 @@
         </FormItem>
     </Form>
     <Table  :columns="historyColumns" :data="list"></Table>
-    <Page :total="dataCount" :page-size="pageSize" show-sizer show-total />
+    <Page 
+     :total="dataCount" 
+     :current="pageNum" 
+     :page-size="pageSize" 
+     show-sizer 
+     show-total
+     @on-change="handlePage" 
+     @on-page-size-change='handlePageSize'
+    />
   </div>
 </template>
 <script>
@@ -32,10 +40,9 @@ export default {
   data() {
     return{
      list:[],
-     ajaxHistoryData: [],
      dataCount: 0,
+     pageNum:1,
      pageSize: 10,
-     xia: 0, //下一页或者上一页的第一项索引值
      historyColumns: [
         {
            title:"序号",
@@ -92,35 +99,35 @@ export default {
           }      
         },
         {
-                        title: '操作',
-                        key: 'action',
-                        width: 300,
-                        align: 'center',
-                        render: (h, params) => {
-                            return h('div', [
-                                h('Button', {                                  
-                                    style: {
-                                        marginRight: '5px'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.show(params.index)
-                                        }
-                                    }
-                                }, '修改'),
-                                h('Button', {
-                                    style: {
-                                        color: 'red'
-                                    },
-                                    on: {
-                                        click: () => {
-                                            this.remove(params.index)
-                                        }
-                                    }
-                                }, '删除')
-                            ]);
-                        }
-                    }
+          title: '操作',
+          key: 'action',
+          width: 300,
+          align: 'center',
+          render: (h, params) => {
+              return h('div', [
+                  h('Button', {                                  
+                      style: {
+                           marginRight: '5px'
+                      },
+                      on: {
+                          click: () => {
+                              this.show(params.index)
+                          }
+                      }
+                   }, '修改'),
+                  h('Button', {
+                      style: {
+                          color: 'red'
+                      },
+                      on: {
+                          click: () => {
+                              this.remove(params.index)
+                          }
+                      }
+                  }, '删除')
+              ]);
+          }
+      }
      ]
     }
   },
@@ -128,26 +135,22 @@ export default {
     this.getList()
   },
   methods: {
+      //获取数据
       getList(){
         let that = this;
-        axios.get('https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/manager')
+        axios.get('https://www.easy-mock.com/mock/5ce8b50fe819874dee9730de/smart/manager?page=1&pageSize=10')
         .then((res)=>{
             console.log(res)            
-            let data = res.data
             if(res.status === 200){
-                that.dataCount = res.data.total_count
-                that.list = data.data.data
+                that.dataCount = res.data.count
+                that.list = res.data.data
             }                   
         })
         .catch((err)=>{
             console.log(err)
         })
     },
-    pages(num) { //修改每页显示条数时调用
-        debugger
-        this.pageSize = num;
-        this. getList(1);
-    },
+    //设置开关
     switch(index) {
       //打开是true,已经处理1
       if (this.data1[index].treatment == 1) {
@@ -156,6 +159,15 @@ export default {
       } else {
         this.updateFeedbackMessage(this.data1[index].id, 'treatment', 1)
       }
+    },
+    //
+    handlePage(value) {
+      this.pageNum = value
+      this.getList()
+    },
+    handlePageSize(value) {
+      this.pageSize = value
+      this.getList()
     },
   }
 }
