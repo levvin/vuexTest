@@ -17,36 +17,20 @@
             <Button type="primary" style="margin-left: 8px"  @click="modal">添加</Button>
             <Modal
               v-model="modal1"
-              title="添加一台新设备"
+              title="添加设备"
               @on-ok="ok"
               @on-cancel="cancel">
-              <Form >
-                <FormItem label="id" prop="id">
-                    <Input type="text" placeholder="请输入角色编码..."></Input>
+              <Form :label-width="80">
+                <FormItem label="设备名称" prop="name" required="true">
+                    <Input type="text" placeholder="请输入设备名称..."></Input>
                 </FormItem>
-                <FormItem label="设备名称" prop="name">
-                    <Input type="text" placeholder="请输入角色名称..."></Input>
-                </FormItem>
-                <FormItem label="设备编号" prop="deviceId">
-                    <Input type="text" placeholder="请输入角色编码..."></Input>
-                </FormItem>
-                
-                <FormItem label="设备类型" prop="type">
-                     <Select style="width:200px">
+                <FormItem label="设备编号" prop="deviceId" required="true">
+                    <Input type="text" placeholder="请输入设备编号..."></Input>
+                </FormItem>               
+                <FormItem label="设备类型" prop="type" required="true">
+                     <Select placeholder="请选择设备类型...">
                         <Option v-for="item in deviceType" :value="item.value" :key="item.value">{{ item.label }}</Option>
                     </Select>
-                </FormItem>
-                 <FormItem label="设备编号" prop="deviceId">
-                    <Input type="text" placeholder="请输入角色编码..."></Input>
-                </FormItem>
-                 <FormItem label="设备编号" prop="deviceId">
-                    <Input type="text" placeholder="请输入角色编码..."></Input>
-                </FormItem>
-                 <FormItem label="设备编号" prop="deviceId">
-                    <Input type="text" placeholder="请输入角色编码..."></Input>
-                </FormItem>
-                 <FormItem label="设备编号" prop="deviceId">
-                    <Input type="text" placeholder="请输入角色编码..."></Input>
                 </FormItem>
               </Form>
             </Modal>
@@ -293,5 +277,5 @@ export default {
     border-color:red;
  }
  .ivu-page{margin-top:5px;float:right;}
-
+ ..ivu-input{width:80%}
 </style>

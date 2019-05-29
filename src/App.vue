@@ -3,63 +3,63 @@
     <Layout>
       <Sider class="sidenav" ref="side1" hide-trigger collapsible :collapsed-width="78" v-model="isCollapsed">
           <Menu active-name="1-2" theme="dark" width="auto" :class="menuitemClasses">
-                    <meun-item name="1-4">
+                    <MenuItem name="1-4">
                       <Submenu name="4">
                         <template slot="title">
                             <Icon type="ios-apps-outline" />
                             系统管理
                         </template>
-                        <menu-item name="4-1">
+                        <MenuItem name="4-1">
                           <router-link to="/sys/role">角色管理</router-link>
-                        </menu-item>
-                        <menu-item name="4-2">
+                        </MenuItem>
+                        <MenuItem name="4-2">
                           <router-link to="/sys/manager">用户管理</router-link>
-                        </menu-item>                       
+                        </MenuItem>                       
                       </Submenu>
-                    </meun-item>
-                    <meun-item name="1-5">
+                    </MenuItem>
+                    <MenuItem name="1-5">
                       <Submenu name="5">
                         <template slot="title">
                             <Icon type="ios-list-box-outline" />
                             数据信息
                         </template>
-                        <menu-item name="5-1">
+                        <MenuItem name="5-1">
                           <router-link to="/data/student">学生信息</router-link>
-                        </menu-item>
-                        <menu-item name="5-2">
+                        </MenuItem>
+                        <MenuItem name="5-2">
                           <router-link to="/data/teacher">老师信息</router-link>
-                        </menu-item>                       
+                        </MenuItem>                       
                       </Submenu>
-                    </meun-item>
-                    <menu-item name="1-6">                       
+                    </MenuItem>
+                    <MenuItem name="1-6">                       
                         <router-link to="/house"><Icon type="ios-home-outline" />房源信息</router-link>
-                    </menu-item>
-                     <menu-item name="1-7">
+                    </MenuItem>
+                     <MenuItem name="1-7">
                        
                         <router-link to="/check"> <Icon type="ios-people-outline" />入住信息</router-link>
-                    </menu-item>
-                     <menu-item name="1-8">
+                    </MenuItem>
+                     <MenuItem name="1-8">
                         
                         <router-link to="/device"><Icon type="ios-lock-outline" />门锁管理</router-link>
-                    </menu-item>
-                     <menu-item name="1-9">
+                    </MenuItem>
+                     <MenuItem name="1-9">
                         
                         <router-link to="/recode"><Icon type="ios-card" />门锁记录</router-link>
-                    </menu-item>
-                    <meun-item name="1-10">
+                    </MenuItem>
+                    <MenuItem name="1-10">
                       <Submenu name="10">
                         <template slot="title">
                             <Icon type="ios-build-outline" />
                             故障报备
                         </template>
-                        <menu-item name="10-1">
+                        <MenuItem name="10-1">
                           <router-link to="/fault/info">故障列表</router-link>
-                        </menu-item>
-                        <menu-item name="10-2">
+                        </MenuItem>
+                        <MenuItem name="10-2">
                           <router-link to="/fault/woker">维修人员</router-link>
-                        </menu-item>                        
+                        </MenuItem>                        
                       </Submenu>
-                    </meun-item>
+                    </MenuItem>
           </Menu>
       </Sider>
       <Layout>
@@ -95,7 +95,7 @@ export default {
     },
     menuitemClasses () {
         return [
-          'menu-item',
+          'MenuItem',
           this.isCollapsed ? 'collapsed-menu' : ''
         ]
     }
@@ -126,31 +126,35 @@ export default {
         border-radius: 4px;
         overflow: hidden;
         height:100%;
-    }
-    .ivu-icon{margin-right:10px;}
-    .sidenav{height:100vh;}
-    .sidenav a{
+}
+.ivu-icon{margin-right:10px;}
+.sidenav{height:100vh;}
+.sidenav a{
       display:block;
       color:rgba(255,255,255,.7);
     }
-    .layout-header-bar{
+.layout-header-bar{
         background: #fff;
         box-shadow: 0 1px 1px rgba(0,0,0,.1);
-    }
-    .layout-logo-left{
+}
+.layout-logo-left{
         width: 20%;
         height: 30px;
         background: #5b6270;
         border-radius: 3px;
         margin: 15px auto;
-    }
-    .menu-icon{
+}
+.menu-icon{
         transition: all .3s;
-    }
-    .rotate-icon{
+}
+.rotate-icon{
         transform: rotate(-90deg);
-    }
-    .menu-item span{
+}
+.ivu-menu-vertical .ivu-menu-item{
+  padding:15px 0;
+
+}
+.menu-item span{
         display: inline-block;
         overflow: hidden;
         width: 69px;
@@ -158,21 +162,21 @@ export default {
         white-space: nowrap;
         vertical-align: bottom;
         transition: width .2s ease .2s;
-    }
-    .menu-item i{
+}
+.menu-item i{
         transform: translateX(0px);
         transition: font-size .2s ease, transform .2s ease;
         vertical-align: middle;
         font-size: 16px;
-    }
-    .collapsed-menu span{
+}
+.collapsed-menu span{
         width: 0px;
         transition: width .2s ease;
-    }
-    .collapsed-menu i{
+}
+.collapsed-menu i{
         transform: translateX(5px);
         transition: font-size .2s ease .2s, transform .2s ease .2s;
         vertical-align: middle;
         font-size: 22px;
-    }
+}
 </style>
